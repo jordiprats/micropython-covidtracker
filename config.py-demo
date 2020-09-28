@@ -1,0 +1,8 @@
+wifi_config = {
+    'ssid':'DEMO',
+    'password':'PASSW0RD'
+}
+
+covid_config = {
+    'school': 'ID'
+}
