@@ -1,15 +1,17 @@
 from config import wifi_config
-from config import covid_confi
+from config import covid_config
 from machine import Pin
-import gc
-import re
-import utime
+import urequests
 import network
 import tm1637
+import utime
+import json
+import re
+import gc
 
 def school_open():
     global tm
-    tm.write([0b00111111, 0b01111100, 0b01010100, 0b01111000])
+    tm.write([0b00111111, 0b01111100, 0b01010000, 0b01111000])
 
 def school_closed():
     global tm
@@ -36,10 +38,41 @@ if not sta_if.isconnected():
     while not sta_if.isconnected():
         utime.sleep(1)
 print(sta_if.ifconfig())
+utime.sleep(5)
 
 try:
-    # covidcache
+    while True:
+        covidcache_url = covid_config['baseurl']+'/school/'+covid_config['school']
+        print(covidcache_url)
+
+        r = urequests.get(covidcache_url)
+        data = json.loads(r.text)
+
+        # 1 hora i poc - per tindre la cache expirada
+        for i in range(0, 200):
+            # ultim update
+            tm.number(data['ultim_update'])
+            utime.sleep(5)
+
+            # estat cole
+            if data['estat_centre']=='Obert':
+                school_open()
+            else:
+                school_closed()
+            utime.sleep(5)
+
+            # confinats
+            tm.number(data['confinats'])
+            utime.sleep(5)
+
+            # positius
+            tm.number(data['positius'])
+            utime.sleep(5)
+
+
 
 except Exception as e:
     if debug: print('unhandled exception')
     if debug: print(str(e))
+    utime.sleep(120)
+    machine.reset()
