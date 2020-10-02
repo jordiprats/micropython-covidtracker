@@ -4,5 +4,6 @@ wifi_config = {
 }
 
 covid_config = {
+    'baseurl': 'http://1.2.3.4:5000',
     'school': 'ID'
 }
