@@ -60,7 +60,7 @@ try:
         if "WTF" in data.keys():
             error_wtf()
             utime.sleep(120)
-            machine.reset()
+            continue
 
         # 1 hora i poc - per tindre la cache expirada
         for i in range(0, 200):
