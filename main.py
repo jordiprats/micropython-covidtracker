@@ -9,6 +9,10 @@ import json
 import re
 import gc
 
+def loading():
+    global tm
+    tm.write([0b10000000, 0b10000000, 0b10000000, 0b10000000])
+
 def error_wtf():
     global tm
     tm.write([0b00000000, 0b00101010, 0b01111000, 0b01110001])
@@ -42,6 +46,7 @@ if not sta_if.isconnected():
     while not sta_if.isconnected():
         utime.sleep(1)
 print(sta_if.ifconfig())
+loading()
 utime.sleep(5)
 
 try:
