@@ -9,6 +9,10 @@ import json
 import re
 import gc
 
+def error_wtf():
+    global tm
+    tm.write([0b00000000, 0b00101010, 0b01111000, 0b01110001])
+
 def school_open():
     global tm
     tm.write([0b00111111, 0b01111100, 0b01010000, 0b01111000])
@@ -48,6 +52,11 @@ try:
         r = urequests.get(covidcache_url)
         data = json.loads(r.text)
 
+        if "WTF" in data.keys():
+            error_wtf()
+            utime.sleep(120)
+            machine.reset()
+
         # 1 hora i poc - per tindre la cache expirada
         for i in range(0, 200):
             # ultim update
@@ -74,5 +83,6 @@ try:
 except Exception as e:
     if debug: print('unhandled exception')
     if debug: print(str(e))
+    error_wtf()
     utime.sleep(120)
     machine.reset()
