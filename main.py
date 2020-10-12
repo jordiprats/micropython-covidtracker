@@ -15,7 +15,30 @@ def loading():
 
 def error_wtf():
     global tm
-    tm.write([0b00000000, 0b00101010, 0b01111000, 0b01110001])
+    tm.write([0b00111100, 0b10011110, 0b11111000, 0b11110001])
+
+def error_bug():
+    global tm
+    tm.write([0b01111100, 0b00111110, 0b10111101, 0b01101111])
+    utime.sleep(5)
+    tm.write([0b01111100, 0b00111110, 0b10111101, 0b01111111])
+    utime.sleep(5)
+    tm.write([0b01111100, 0b00111110, 0b10111101, 0b00000111])
+    utime.sleep(5)
+    tm.write([0b01111100, 0b00111110, 0b10111101, 0b01111101])
+    utime.sleep(5)
+    tm.write([0b01111100, 0b00111110, 0b10111101, 0b01101101])
+    utime.sleep(5)
+    tm.write([0b01111100, 0b00111110, 0b10111101, 0b01100110])
+    utime.sleep(5)
+    tm.write([0b01111100, 0b00111110, 0b10111101, 0b01001111])
+    utime.sleep(5)
+    tm.write([0b01111100, 0b00111110, 0b10111101, 0b01011011])
+    utime.sleep(5)
+    tm.write([0b01111100, 0b00111110, 0b10111101, 0b00000110])
+    utime.sleep(5)
+    tm.write([0b01111100, 0b00111110, 0b10111101, 0b00111111])
+    utime.sleep(5)
 
 def school_open():
     global tm
@@ -49,8 +72,8 @@ print(sta_if.ifconfig())
 loading()
 utime.sleep(5)
 
-try:
-    while True:
+while True:
+    try:
         covidcache_url = covid_config['baseurl']+'/school/'+covid_config['school']
         print(covidcache_url)
 
@@ -59,7 +82,7 @@ try:
 
         if "WTF" in data.keys():
             error_wtf()
-            utime.sleep(120)
+            utime.sleep(30)
             continue
 
         # 1 hora i poc - per tindre la cache expirada
@@ -82,12 +105,10 @@ try:
             # positius
             tm.number(data['positius'])
             utime.sleep(5)
+    except Exception as e:
+        if debug: print('unhandled exception')
+        if debug: print(str(e))
+        error_bug()
 
 
 
-except Exception as e:
-    if debug: print('unhandled exception')
-    if debug: print(str(e))
-    error_wtf()
-    utime.sleep(120)
-    machine.reset()
