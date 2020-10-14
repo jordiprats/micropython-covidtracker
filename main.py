@@ -76,38 +76,41 @@ while True:
         utime.sleep(5)
 
         while True:
-            try:
-                covidcache_url = covid_config['baseurl']+'/school/'+covid_config['school']
-                print(covidcache_url)
+            covidcache_url = covid_config['baseurl']+'/school/'+covid_config['school']
+            print(covidcache_url)
 
-                r = urequests.get(covidcache_url)
-                data = json.loads(r.text)
+            r = urequests.get(covidcache_url)
+            data = json.loads(r.text)
 
-                if "WTF" in data.keys():
-                    error_wtf()
-                    utime.sleep(30)
-                    continue
+            if "WTF" in data.keys():
+                error_wtf()
+                utime.sleep(30)
+                continue
 
-                # 1 hora i poc - per tindre la cache expirada
-                for i in range(0, 200):
-                    # ultim update
-                    tm.number(data['ultim_update'])
-                    utime.sleep(5)
+            # 1 hora i poc - per tindre la cache expirada
+            for i in range(0, 200):
+                # ultim update
+                tm.number(data['ultim_update'])
+                utime.sleep(5)
 
-                    # estat cole
-                    if data['estat_centre']=='Obert':
-                        school_open()
-                    else:
-                        school_closed()
-                    utime.sleep(5)
+                # estat cole
+                if data['estat_centre']=='Obert':
+                    school_open()
+                else:
+                    school_closed()
+                utime.sleep(5)
 
-                    # confinats
-                    tm.number(data['confinats'])
-                    utime.sleep(5)
+                # grups confinats
+                tm.number(data['groups_confinats'])
+                utime.sleep(5)
 
-                    # positius
-                    tm.number(data['positius'])
-                    utime.sleep(5)
+                # confinats
+                tm.number(data['confinats'])
+                utime.sleep(5)
+
+                # positius
+                tm.number(data['positius'])
+                utime.sleep(5)
     except Exception as e:
         if debug: print('unhandled exception')
         if debug: print(str(e))
